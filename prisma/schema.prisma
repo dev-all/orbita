@@ -1,0 +1,151 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Sourcing {
+  STOCK
+  ON_REQUEST
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PREPARING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REVIEW
+}
+
+enum PaymentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  REFUNDED
+}
+
+model Product {
+  id          String    @id
+  slug        String    @unique
+  name        String
+  description String
+  category    String
+  artwork     String
+  tone        String
+  featured    Boolean   @default(false)
+  badge       String?
+  active      Boolean   @default(true)
+  isDemo      Boolean   @default(false)
+  weightGrams Int
+  widthCm     Int
+  heightCm    Int
+  depthCm     Int
+  variants    Variant[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Variant {
+  id                 String       @id
+  sku                String       @unique
+  label              String
+  color              String
+  priceCents         Int
+  stock              Int          @default(0)
+  reserved           Int          @default(0)
+  sourcing           Sourcing     @default(STOCK)
+  supplierConfirmed  Boolean      @default(false)
+  supplierAvailable  Int          @default(0)
+  supplierConfirmedAt DateTime?
+  leadDays           Int          @default(2)
+  supplierId         String?
+  supplier           Supplier?    @relation(fields: [supplierId], references: [id])
+  productId          String
+  product            Product      @relation(fields: [productId], references: [id])
+  orderItems         OrderItem[]
+  movements          StockMovement[]
+}
+
+model Supplier {
+  id       String    @id @default(cuid())
+  name     String
+  isDemo   Boolean   @default(false)
+  variants Variant[]
+}
+
+model Customer {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  isDemo    Boolean  @default(false)
+  orders    Order[]
+  createdAt DateTime @default(now())
+}
+
+model Order {
+  id                   String        @id @default(cuid())
+  number               String        @unique
+  status               OrderStatus   @default(PENDING)
+  channel              String        @default("WEB")
+  currency             String        @default("ARS")
+  subtotalCents        Int
+  shippingCents        Int
+  totalCents           Int
+  deliveryAddress      Json?
+  isDemo               Boolean       @default(false)
+  reservationExpiresAt DateTime?
+  customerId           String
+  customer             Customer      @relation(fields: [customerId], references: [id])
+  items                OrderItem[]
+  payments             Payment[]
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+}
+
+model OrderItem {
+  id             String  @id @default(cuid())
+  productName    String
+  sku            String
+  color          String
+  quantity       Int
+  unitPriceCents Int
+  leadDays       Int
+  sourcing       Sourcing
+  orderId        String
+  order          Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  variantId      String
+  variant        Variant @relation(fields: [variantId], references: [id])
+}
+
+model Payment {
+  id             String        @id @default(cuid())
+  provider       String        @default("MERCADOPAGO")
+  externalId     String        @unique
+  status         PaymentStatus @default(PENDING)
+  amountCents    Int
+  orderId        String
+  order          Order         @relation(fields: [orderId], references: [id])
+  updatedAt      DateTime      @updatedAt
+}
+
+model WebhookEvent {
+  id          String   @id
+  provider    String
+  processedAt DateTime?
+  receivedAt  DateTime @default(now())
+}
+
+model StockMovement {
+  id            String   @id @default(cuid())
+  variantId     String
+  variant       Variant  @relation(fields: [variantId], references: [id])
+  quantity      Int
+  reason        String
+  reference     String   @unique
+  createdAt     DateTime @default(now())
+}

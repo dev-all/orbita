@@ -1,10 +1,10 @@
 # Guía central de la tienda y plan de lanzamiento
 
-Actualización: 22 de noviembre de 2026. Estado: planificación; implementación pendiente.
+Actualización: 22 de noviembre de 2026. Estado: primera implementación local en curso; ventas deshabilitadas.
 
 Crear una tienda propia para Argentina con Next.js y PostgreSQL, empezando con veinte productos de bazar para Navidad. El objetivo es completar primero una compra confiable y administrar pedidos e inventario desde un único panel. La marca debe permitir incorporar ferretería y tecnología después.
 
-Esta guía concentra decisiones, alcance, dependencias y trabajo futuro. Las fechas son una propuesta de organización, no una fecha de entrega comprometida. Cada tarea se marcará completada únicamente cuando exista su resultado verificable.
+Esta guía concentra decisiones, alcance, dependencias y trabajo futuro. Las fechas son una propuesta de organización, no una fecha de entrega comprometida. Cada tarea se marcará completada únicamente cuando exista su resultado verificable. Consultar el estado real del primer hito al final de esta guía.
 
 ## Decisiones del negocio
 
@@ -131,7 +131,7 @@ También se incluirán casos de stock agotado, bajo pedido, carrito mixto, pago 
 
 S1: 23 al 29 de noviembre. S2: 30 de noviembre al 6 de diciembre. S3: 7 al 13 de diciembre. S4: 14 al 20 de diciembre de 2026. Posterior: después de estabilizar la tienda. La puesta en marcha depende del catálogo real, medios de cobro, logística y facturación; no queda comprometida una fecha de apertura.
 
-Leyenda: **■** trabajo previsto; **◆** hito condicionado a validación. Todas las actividades de implementación están pendientes.
+Leyenda: **■** trabajo previsto; **◆** hito condicionado a validación. El Gantt representa la planificación; el estado de implementación se registra por separado al final de la guía.
 
 | ID | Frente | S1 | S2 | S3 | S4 | Posterior | Depende de |
 | --- | --- | :---: | :---: | :---: | :---: | :---: | --- |
@@ -188,11 +188,11 @@ Hasta integrar Mercado Libre, registrar sus ventas manualmente en el panel o sep
 
 ## Próximas acciones
 
-1. Preparar tres propuestas de marca con nombre y paleta; elegir una dirección para el diseño.
+1. Elegir una dirección entre las tres [propuestas de marca](docs/MARCA.md); Órbita se usa provisionalmente en la interfaz.
 2. Comprobar correspondencia del CP 1643 con el domicilio de despacho y definir reparto local.
-3. Preparar desde cero el proyecto y el modelo de datos con stock propio y bajo pedido.
-4. Implementar los seeds y la plantilla CSV antes de desarrollar la tienda sobre ese catálogo.
-5. Crear o conectar las cuentas necesarias cuando las integraciones lo requieran, sin inventar credenciales.
+3. Validar la primera versión local y conectar una base Neon de desarrollo.
+4. Completar autenticación, edición administrativa y flujo real de pedidos con reservas.
+5. Conectar y verificar Mercado Pago, Correo y correo transaccional, sin inventar credenciales.
 
 ## Registro de decisiones
 
@@ -203,6 +203,26 @@ Hasta integrar Mercado Libre, registrar sus ventas manualmente en el panel o sep
 | 22 nov 2026 | Posponer sincronización automática con Mercado Libre y documentar sus dependencias |
 | 22 nov 2026 | Elegir Neon Free para desarrollo; condicionar Vercel Hobby a sus términos y mantener alternativa local gratuita |
 | 22 nov 2026 | Crear esta guía como referencia central; todas las implementaciones continúan pendientes |
+| 22 nov 2026 | Autorizar comienzo del desarrollo desde cero y preparación del instructivo Docker |
+| 22 nov 2026 | Usar npm y un único package-lock en el proyecto nuevo; nombre Órbita provisional |
+
+## Estado del primer hito local
+
+| Área | Implementación | Validación |
+| --- | --- | --- |
+| Git | main inicial y rama feat/local-setup; sin remoto | Repositorio inicializado |
+| Marca | Tres propuestas documentadas; Órbita provisional | Elección del titular pendiente |
+| Catálogo | Veinte productos, cuarenta variantes, búsqueda, filtros y ficha | Ver informe técnico |
+| Carrito | Persistencia local y revisión de cantidades/precios en servidor | Ver informe técnico |
+| Checkout | Cotización simulada; no cobra, reserva ni crea pedidos | Prueba local; integración real pendiente |
+| Administración | Inventario de muestra, público y solo lectura | Autenticación y edición real pendientes |
+| PostgreSQL | Esquema Prisma, seed protegido y migraciones | Seed probado dos veces en PGlite efímero; Neon pendiente de conexión |
+| Docker | Dockerfile, Compose e [instructivo para principiantes](docs/DESPLIEGUE_DOCKER.md) | Motor local inactivo; imagen sin validar |
+| Integraciones | Marcadores de entorno y bloqueo explícito de pagos | Mercado Pago, Correo y Clerk pendientes |
+
+Los resultados concretos de los comandos y las limitaciones se conservan en [validaciones](docs/VALIDACIONES.md). El prototipo no equivale a una tienda habilitada para vender.
+
+El primer hito pasó tipos, lint, nueve pruebas de reglas comerciales y build de producción. Se comprobaron rutas HTTP y el recorrido del carrito en escritorio y móvil. Queda mantenimiento de la cadena de lint por la compatibilidad de los plugins de Next.js con ESLint 10.
 
 ## Cómo mantener la guía
 
