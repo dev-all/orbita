@@ -1,6 +1,6 @@
 # Órbita tienda
 
-Primera base funcional de una tienda propia para Argentina. Órbita es una identidad provisional. Incluye veinte productos ficticios, cuarenta variantes, filtros, carrito persistente, cotización simulada y una vista administrativa de solo lectura.
+Primera base funcional de una tienda propia para Argentina. Órbita es una identidad provisional. Incluye veinte productos ficticios, cuarenta variantes, filtros, carrito persistente, cotización simulada y un editor administrativo con borradores locales y acceso real preparado con Clerk.
 
 ## Arrancar en Windows
 
@@ -23,16 +23,16 @@ Si `.env.local` ya existe, conservarlo en lugar de copiar encima. Abrir la URL L
 - Carrito con persistencia local y cantidades limitadas por variante.
 - Revisión en servidor de cantidades, disponibilidad y precios del catálogo.
 - Simulación del envío, sin recopilar datos personales ni cobrar.
-- Vista `/admin` de inventario ficticio, solo lectura.
+- Editor `/admin` con borradores locales de prueba y edición en PostgreSQL protegida por Clerk y ADMIN_USER_IDS.
 - Modelo Prisma, migración inicial y seed protegido para PostgreSQL.
 - Exportación CSV con cuarenta variantes y plantilla de catálogo real.
 - Configuración standalone, Docker y guías de despliegue.
 
 ## Qué sigue pendiente
 
-La aplicación todavía no está habilitada para ventas. Faltan autenticación y edición administrativa, reservas transaccionales y vencimientos, creación de pedidos reales, integración de Mercado Pago, validación del webhook, Correo Argentino real, correos, facturación, políticas y catálogo comercial. El endpoint de Mercado Pago devuelve 503 deliberadamente: no afirma haber procesado una notificación.
+La aplicación todavía no está habilitada para ventas. Falta configurar y verificar Clerk y Neon con tus cuentas; también quedan reservas de pedidos y vencimientos, creación de pedidos reales, integración de Mercado Pago, validación del webhook, Correo Argentino real, correos, facturación, políticas y catálogo comercial. El endpoint de Mercado Pago devuelve 503 deliberadamente: no afirma haber procesado una notificación.
 
-No se entrega una integración falsa ni se usa un botón de pago decorativo. En modo `database`, el checkout y la administración real permanecen bloqueados hasta implementar esas funciones.
+No se entrega una integración falsa ni se usa un botón de pago decorativo. En modo `database`, el checkout permanece bloqueado; la administración requiere claves de Clerk válidas y un usuario incluido en ADMIN_USER_IDS. Consultar la guía de configuración.
 
 ## Conectar Neon Free
 
@@ -72,6 +72,7 @@ Se eligió npm para este proyecto nuevo y se versiona un único `package-lock.js
 
 - [Guía central y Gantt](GUIA_CENTRAL.md)
 - [Despliegue con Docker y VPS](docs/DESPLIEGUE_DOCKER.md)
+- [Conectar Neon y Clerk](docs/CONFIGURAR_NEON_CLERK.md)
 - [Propuestas iniciales de marca](docs/MARCA.md)
 - [Validaciones y estado técnico](docs/VALIDACIONES.md)
 

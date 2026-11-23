@@ -2085,3 +2085,138 @@ th {
     animation: none !important;
   }
 }
+
+.admin-draft-tools {
+  display: flex;
+  gap: 22px;
+  padding: 10px 0 24px;
+}
+.admin-editor-grid {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+.admin-product-list {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  max-height: 850px;
+  overflow: auto;
+}
+.admin-product-list > label {
+  display: block;
+  padding: 16px;
+  font-size: 14px;
+}
+.admin-product-list input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  margin-top: 8px;
+}
+.admin-product-list > button {
+  display: block;
+  text-align: left;
+  padding: 16px;
+  border-top: 1px solid var(--line);
+  width: 100%;
+}
+.admin-product-list > button.selected {
+  background: #edf3ed;
+  border-left: 4px solid var(--teal);
+}
+.admin-product-list strong {
+  font-size: 14px;
+  display: block;
+}
+.admin-product-list small {
+  font-size: 12px;
+  color: var(--muted);
+  display: block;
+  margin-top: 6px;
+}
+.admin-product-form {
+  border: 1px solid var(--line);
+  padding: 28px;
+  border-radius: 8px;
+}
+.admin-product-form h2 {
+  font-size: 27px;
+  font-weight: 500;
+}
+.admin-form-hint {
+  color: var(--muted);
+  font-size: 12px;
+  margin: 12px 0 24px;
+  overflow-wrap: anywhere;
+}
+.admin-product-form label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 18px;
+}
+.admin-product-form input:not([type="checkbox"]),
+.admin-product-form textarea,
+.admin-product-form select {
+  display: block;
+  width: 100%;
+  border: 1px solid #bcc7bd;
+  padding: 11px;
+  border-radius: 4px;
+  margin-top: 8px;
+  font: inherit;
+  background: white;
+}
+.admin-product-form textarea {
+  resize: vertical;
+}
+.admin-checks {
+  display: flex;
+  gap: 24px;
+  margin: 22px 0;
+}
+.admin-checks input,
+.admin-confirm input {
+  margin-right: 9px;
+}
+.admin-product-form h3 {
+  font-weight: 500;
+  margin: 20px 0;
+}
+.admin-product-form fieldset {
+  border: 1px solid var(--line);
+  padding: 18px;
+  margin: 20px 0;
+  border-radius: 6px;
+}
+.admin-product-form legend {
+  font-size: 12px;
+  padding: 0 8px;
+}
+.admin-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 18px;
+}
+.admin-save-message {
+  padding: 15px;
+  margin: 16px 0;
+  background: #edf3ed;
+  font-size: 14px;
+  line-height: 1.6;
+}
+@media (max-width: 760px) {
+  .admin-editor-grid {
+    grid-template-columns: 1fr;
+  }
+  .admin-product-list {
+    max-height: 270px;
+  }
+  .admin-product-form {
+    padding: 18px;
+  }
+  .admin-fields {
+    grid-template-columns: 1fr;
+  }
+}

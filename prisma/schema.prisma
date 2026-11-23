@@ -149,3 +149,15 @@ model StockMovement {
   reference     String   @unique
   createdAt     DateTime @default(now())
 }
+
+model AdminAudit {
+  id        String   @id @default(cuid())
+  actorId   String
+  productId String
+  action    String
+  before    Json
+  after     Json
+  createdAt DateTime @default(now())
+
+  @@index([productId, createdAt])
+}

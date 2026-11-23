@@ -65,3 +65,17 @@ Capturas: [portada de escritorio](capturas/inicio-escritorio.jpg) y [catálogo m
 ## Límites actuales
 
 El modo demo permite verificar interfaz y cotización sin Neon. El seed requiere una base de desarrollo y confirmación explícita. La imagen Docker necesita un motor activo. Mercado Pago, Correo y la autenticación administrativa real son integraciones pendientes. La tienda no recibe ventas, y los pedidos del seed son exclusivamente fixtures de desarrollo.
+
+## Administración del 23 de noviembre de 2026
+
+- Clerk 7.10.7 instalado con peers compatibles. Claves y lista ADMIN_USER_IDS todavía pendientes, comprobadas sin mostrar valores.
+- TypeScript, lint y build aprobados. El build incluye proxy condicional y ruta /admin/ingresar/[[...rest]].
+- npm test: trece pruebas aprobadas, incluyendo autorización por ID exacto, importes decimales y entradas administrativas inválidas.
+- Cinco comprobaciones con Prisma sobre PGlite efímero: guardado con auditoría y movimiento, rechazo de versión antigua, rechazo de stock inferior a reservas, rechazo de variante ajena y rollback de producto/stock/movimiento ante fallo de auditoría. No se utilizaron datos reales.
+- npm audit: cero vulnerabilidades reportadas con Clerk instalado.
+- env:check y db:check detectaron variables pendientes; no se intentó conectar a Neon con marcadores ni se aplicaron migraciones remotas.
+- Editor demo verificado en navegador: cambio de nombre y precio decimal, guardado, recarga, recuperación y descarte. Sin errores de consola en la instancia de producción local de prueba, puerto 3002; esa instancia se cerró al terminar.
+- Se reutilizó para inspección HTTP el servidor de desarrollo ya existente del proyecto, sin detenerlo. La comprobación de formularios se aisló en producción local después de observar envío nativo antes de que el editor estuviera interactivo. Se deshabilitó el envío hasta la hidratación y se fijó método POST para evitar campos en la URL.
+- Captura nueva: [editor administrativo](capturas/panel-editor.jpg).
+
+El login externo de Clerk, la autorización con una cuenta real y el guardado en Neon no se consideran verificados. Ya existe su implementación; se validarán cuando el titular complete la configuración. La guía CONFIGURAR_NEON_CLERK.md describe los pasos y los comandos que no revelan secretos.

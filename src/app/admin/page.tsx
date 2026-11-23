@@ -1,83 +1,131 @@
-import { getProducts, isDemo } from "@/lib/catalog";
-import { availableQuantity, formatMoney } from "@/lib/commerce";
-import { Package, Layers, ClipboardList } from "lucide-react";
-export const metadata = { title: "Administración de muestra" };
+import Link from "next/link";
+import { UserButton } from "@clerk/nextjs";
+import { isDemo } from "@/lib/catalog";
+import { demoProducts } from "@/lib/catalog-data";
+import { adminAccess } from "@/lib/admin-access";
+import { AdminEditor } from "@/components/admin-editor";
+import type { EditableProduct } from "@/lib/admin-schema";
+
+export const metadata = { title: "Administración" };
 export default async function Admin() {
-  if (!isDemo())
-    return (
-      <main id="contenido" className="container information-page">
-        <h1>Administración bloqueada</h1>
-        <p>
-          Es necesario integrar autenticación y autorización administrativa
-          antes de habilitar operaciones sobre la base de datos.
-        </p>
-      </main>
-    );
-  const products = await getProducts();
+  const demo = isDemo();
+  let products: EditableProduct[];
+  if (demo) {
+    products = demoProducts.map((p) => ({
+      id: p.id,
+      slug: p.slug,
+      name: p.name,
+      description: p.description,
+      category: p.category,
+      active: true,
+      featured: p.featured,
+      version: "2026-11-23T00:00:00.000Z",
+      reserved: {},
+      variants: p.variants.map(
+        ({
+          id,
+          color,
+          label,
+          priceCents,
+          stock,
+          sourcing,
+          supplierConfirmed,
+          supplierAvailable,
+          leadDays,
+        }) => ({
+          id,
+          color,
+          label,
+          priceCents,
+          stock,
+          sourcing,
+          supplierConfirmed,
+          supplierAvailable,
+          leadDays,
+        }),
+      ),
+    }));
+  } else {
+    const access = await adminAccess();
+    if (access.status !== "allowed")
+      return (
+        <main id="contenido" className="container information-page">
+          <h1>Administración protegida</h1>
+          <p>
+            {access.status === "unconfigured"
+              ? "Falta configurar Clerk en .env.local. No ingreses claves en el chat."
+              : access.status === "signed-out"
+                ? "Ingresá con tu cuenta de administrador."
+                : "Tu cuenta no tiene permiso administrativo. El titular debe incluir tu ID en ADMIN_USER_IDS."}
+          </p>
+          <Link className="button" href="/admin/ingresar">
+            Acceso administrativo
+          </Link>
+        </main>
+      );
+    const { getDb } = await import("@/lib/db");
+    const records = await getDb().product.findMany({
+      include: { variants: { orderBy: { sku: "asc" } } },
+      orderBy: { name: "asc" },
+    });
+    products = records.map((p) => ({
+      id: p.id,
+      slug: p.slug,
+      name: p.name,
+      description: p.description,
+      category: p.category as EditableProduct["category"],
+      active: p.active,
+      featured: p.featured,
+      version: p.updatedAt.toISOString(),
+      reserved: Object.fromEntries(p.variants.map((v) => [v.id, v.reserved])),
+      variants: p.variants.map(
+        ({
+          id,
+          color,
+          label,
+          priceCents,
+          stock,
+          sourcing,
+          supplierConfirmed,
+          supplierAvailable,
+          leadDays,
+        }) => ({
+          id,
+          color,
+          label,
+          priceCents,
+          stock,
+          sourcing,
+          supplierConfirmed,
+          supplierAvailable,
+          leadDays,
+        }),
+      ),
+    }));
+  }
   return (
     <main id="contenido" className="container admin-page">
       <div className="section-title">
         <div>
-          <span className="eyebrow">VISTA PREVIA DEL PANEL</span>
-          <h1>Todo empieza por un buen orden.</h1>
-          <p>Catálogo de demostración · Solo lectura · Sin datos personales</p>
+          <span className="eyebrow">PANEL DE PRODUCTOS</span>
+          <h1>Tu catálogo, en orden.</h1>
+          <p>
+            {products.length} productos ·{" "}
+            {demo
+              ? "Borradores de demostración"
+              : "Edición autenticada en PostgreSQL"}
+          </p>
         </div>
-      </div>
-      <div className="admin-stats">
-        <div>
-          <Package />
-          <span>Productos</span>
-          <strong>{products.length}</strong>
-        </div>
-        <div>
-          <Layers />
-          <span>Variantes</span>
-          <strong>{products.reduce((n, p) => n + p.variants.length, 0)}</strong>
-        </div>
-        <div>
-          <ClipboardList />
-          <span>Compras reales</span>
-          <strong>Deshabilitadas</strong>
-        </div>
+        {!demo && <UserButton />}
       </div>
       <div className="callout">
         <p>
-          Esta vista pública solo muestra información ficticia. La
-          administración real permanecerá bloqueada hasta implementar acceso por
-          rol, auditoría y operaciones de inventario.
+          {demo
+            ? "Podés probar los formularios sin cuenta. Guardar conserva un borrador en este navegador; no modifica el catálogo público ni la base de datos."
+            : "Los cambios requieren autorización administrativa y quedan registrados. El stock físico no puede ser inferior a las reservas."}
         </p>
       </div>
-      <div className="table-scroll">
-        <table>
-          <caption>Inventario de muestra</caption>
-          <thead>
-            <tr>
-              <th>SKU</th>
-              <th>Producto</th>
-              <th>Variante</th>
-              <th>Precio</th>
-              <th>Abastecimiento</th>
-              <th>Disponible</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.flatMap((p) =>
-              p.variants.map((v) => (
-                <tr key={v.id}>
-                  <td>{v.sku}</td>
-                  <td>{p.name}</td>
-                  <td>{v.color}</td>
-                  <td>{formatMoney(v.priceCents)}</td>
-                  <td>
-                    {v.sourcing === "STOCK" ? "Stock propio" : "Bajo pedido"}
-                  </td>
-                  <td>{availableQuantity(v)}</td>
-                </tr>
-              )),
-            )}
-          </tbody>
-        </table>
-      </div>
+      <AdminEditor products={products} demo={demo} />
     </main>
   );
 }

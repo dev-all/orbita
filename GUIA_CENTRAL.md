@@ -1,6 +1,6 @@
 # Guía central de la tienda y plan de lanzamiento
 
-Actualización: 22 de noviembre de 2026. Estado: primera implementación local en curso; ventas deshabilitadas.
+Actualización: 23 de noviembre de 2026. Estado: primera implementación local en curso; ventas deshabilitadas.
 
 Crear una tienda propia para Argentina con Next.js y PostgreSQL, empezando con veinte productos de bazar para Navidad. El objetivo es completar primero una compra confiable y administrar pedidos e inventario desde un único panel. La marca debe permitir incorporar ferretería y tecnología después.
 
@@ -191,7 +191,7 @@ Hasta integrar Mercado Libre, registrar sus ventas manualmente en el panel o sep
 1. Elegir una dirección entre las tres [propuestas de marca](docs/MARCA.md); Órbita se usa provisionalmente en la interfaz.
 2. Comprobar correspondencia del CP 1643 con el domicilio de despacho y definir reparto local.
 3. Validar la primera versión local y conectar una base Neon de desarrollo.
-4. Completar autenticación, edición administrativa y flujo real de pedidos con reservas.
+4. Configurar y validar el acceso de Clerk y Neon; después implementar pedidos y reservas.
 5. Conectar y verificar Mercado Pago, Correo y correo transaccional, sin inventar credenciales.
 
 ## Registro de decisiones
@@ -215,10 +215,10 @@ Hasta integrar Mercado Libre, registrar sus ventas manualmente en el panel o sep
 | Catálogo | Veinte productos, cuarenta variantes, búsqueda, filtros y ficha | Ver informe técnico |
 | Carrito | Persistencia local y revisión de cantidades/precios en servidor | Ver informe técnico |
 | Checkout | Cotización simulada; no cobra, reserva ni crea pedidos | Prueba local; integración real pendiente |
-| Administración | Inventario de muestra, público y solo lectura | Autenticación y edición real pendientes |
+| Administración | Editor de variantes existentes, borradores locales y guardado transaccional con auditoría | Pruebas locales aprobadas; acceso externo Clerk y Neon pendiente |
 | PostgreSQL | Esquema Prisma, seed protegido y migraciones | Seed probado dos veces en PGlite efímero; Neon pendiente de conexión |
 | Docker | Dockerfile, Compose e [instructivo para principiantes](docs/DESPLIEGUE_DOCKER.md) | Motor local inactivo; imagen sin validar |
-| Integraciones | Marcadores de entorno y bloqueo explícito de pagos | Mercado Pago, Correo y Clerk pendientes |
+| Integraciones | Clerk instalado, lista de administradores y guía de Neon; pagos bloqueados | Verificar Clerk y Neon con cuentas reales; Mercado Pago y Correo pendientes |
 
 Los resultados concretos de los comandos y las limitaciones se conservan en [validaciones](docs/VALIDACIONES.md). El prototipo no equivale a una tienda habilitada para vender.
 
@@ -227,3 +227,11 @@ El primer hito pasó tipos, lint, nueve pruebas de reglas comerciales y build de
 ## Cómo mantener la guía
 
 Actualizar estados, dependencias y fechas al cerrar cada hito. Registrar aquí los cambios de alcance y enlazar los documentos específicos cuando existan. No marcar una integración completa por disponer solo de un mock ni guardar claves o datos personales en esta guía.
+
+## Segundo hito de administración
+
+23 de noviembre de 2026: se implementó el editor de productos y variantes existentes. En demostración guarda, restaura y descarta borradores por navegador; no cambia la tienda pública. En PostgreSQL exige una sesión Clerk cuyo ID figure en ADMIN_USER_IDS, valida la versión, protege el inventario reservado y registra auditoría y movimientos en una transacción.
+
+Trece pruebas automáticas y cinco escenarios de persistencia en PGlite efímero aprobados. El guardado y recuperación de borrador se probaron en navegador. La autenticación externa y las escrituras en Neon quedan pendientes de completar las variables locales; no se crearon cuentas ni se inventaron claves. Seguir [configuración de Neon y Clerk](docs/CONFIGURAR_NEON_CLERK.md).
+
+La paleta actual de Órbita fue confirmada; el nombre continúa provisional. Alta de productos y variantes, imágenes, proveedores, pedidos de WhatsApp y reservas de compra siguen en el alcance pendiente de T06.

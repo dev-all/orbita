@@ -16,7 +16,9 @@
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
     "db:seed": "prisma db seed",
-    "catalog:export": "tsx scripts/export-catalog.ts"
+    "catalog:export": "tsx scripts/export-catalog.ts",
+    "env:check": "tsx scripts/check-environment.ts",
+    "db:check": "tsx scripts/check-environment.ts --database"
   },
   "overrides": {
     "@prisma/config": {
@@ -24,6 +26,7 @@
     }
   },
   "dependencies": {
+    "@clerk/nextjs": "7.10.7",
     "@prisma/adapter-pg": "7.10.1",
     "@prisma/client": "7.10.1",
     "lucide-react": "1.77.0",
