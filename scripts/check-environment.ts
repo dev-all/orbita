@@ -1,8 +1,10 @@
 import { config } from "dotenv";
 import pg from "pg";
+import { configureDatabaseNetwork } from "../src/lib/database-network";
 config({ path: ".env.local", quiet: true });
 config({ quiet: true });
 async function main() {
+  configureDatabaseNetwork();
   const required = [
     "DATABASE_URL",
     "DIRECT_URL",

@@ -2,10 +2,12 @@ import { config } from "dotenv";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../src/generated/prisma/client";
 import { demoProducts } from "../src/lib/catalog-data";
+import { configureDatabaseNetwork } from "../src/lib/database-network";
 config({ path: ".env.local", quiet: true });
 config({ quiet: true });
 
 async function seed() {
+  configureDatabaseNetwork();
   if (
     process.env.APP_ENV !== "development" ||
     process.env.NODE_ENV === "production" ||
@@ -25,6 +27,9 @@ async function seed() {
     }),
   });
   try {
+    // La primera conexión a Neon puede tardar más que la espera por defecto
+    // de una transacción interactiva, especialmente con el compute suspendido.
+    await db.$connect();
     await db.$transaction(
       async (tx) => {
         await tx.supplier.upsert({
@@ -109,7 +114,7 @@ async function seed() {
           });
         }
       },
-      { timeout: 30000 },
+      { maxWait: 20000, timeout: 120000 },
     );
     console.log(
       "Seed completado: 20 productos, 40 variantes, proveedor ficticio y 3 pedidos de prueba. Los registros existentes no se sobrescriben.",

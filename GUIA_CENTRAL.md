@@ -235,3 +235,9 @@ Actualizar estados, dependencias y fechas al cerrar cada hito. Registrar aquí l
 Trece pruebas automáticas y cinco escenarios de persistencia en PGlite efímero aprobados. El guardado y recuperación de borrador se probaron en navegador. La autenticación externa y las escrituras en Neon quedan pendientes de completar las variables locales; no se crearon cuentas ni se inventaron claves. Seguir [configuración de Neon y Clerk](docs/CONFIGURAR_NEON_CLERK.md).
 
 La paleta actual de Órbita fue confirmada; el nombre continúa provisional. Alta de productos y variantes, imágenes, proveedores, pedidos de WhatsApp y reservas de compra siguen en el alcance pendiente de T06.
+
+## Neon conectado
+
+Se verificaron las dos conexiones de la misma base, sin registrar credenciales. La rama denominada production se usa por ahora como desarrollo por decisión del titular. Se aplicaron las tres migraciones y el seed: veinte productos, cuarenta variantes y tres pedidos ficticios. CATALOG_SOURCE=database quedó activado únicamente en .env.local, que está excluido de Git.
+
+Las tablas de catálogo y auditoría están presentes. Se añadió un ajuste optativo de red para Node en esta computadora, manteniendo TLS. Próximo requisito externo: configurar Clerk y ADMIN_USER_IDS para habilitar la edición real del panel.

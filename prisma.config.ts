@@ -1,7 +1,9 @@
 import { config } from "dotenv";
 import { defineConfig } from "prisma/config";
+import { configureDatabaseNetwork } from "./src/lib/database-network";
 config({ path: ".env.local", quiet: true });
 config({ quiet: true });
+configureDatabaseNetwork();
 export default defineConfig({
   schema: "prisma/schema.prisma",
   migrations: { path: "prisma/migrations", seed: "tsx prisma/seed.ts" },

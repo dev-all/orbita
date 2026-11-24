@@ -43,3 +43,13 @@ En esta etapa no se crean ni eliminan productos, variantes, proveedores o pedido
 ## Cuando termines
 
 Podés avisar únicamente «variables completadas». No enviar valores. La configuración real de cuentas, el login externo y la escritura en Neon deben verificarse con tus servicios; las pruebas locales no se presentan como integración externa completada.
+
+## Conexión verificada en este proyecto
+
+Se utiliza por decisión del titular la rama de Neon llamada production como entorno de desarrollo inicial. Se verificó que estaba vacía antes de aplicar las tres migraciones. Se cargaron veinte productos, cuarenta variantes, un cliente ficticio, un proveedor ficticio y tres pedidos de prueba. No se cargaron ventas ni datos personales reales.
+
+La configuración local ya utiliza CATALOG_SOURCE=database. Las claves de Clerk y ADMIN_USER_IDS siguen pendientes, por lo que el panel real permanece protegido.
+
+En esta computadora, la autoselección IPv4/IPv6 de Node produjo ETIMEDOUT. Las conexiones directas por IPv4 con certificado TLS verificado funcionaron. DATABASE_IPV4_ONLY=true habilita un ajuste optativo de los valores de red por defecto del proceso Node. No cambia DNS ni firewall del sistema, no fija una IP de Neon y no reduce la validación TLS. La plantilla lo deja en false para otros entornos.
+
+El seed abre la conexión antes de su transacción y permite 20 segundos de espera y hasta 120 segundos de ejecución para la carga inicial remota. No volver a ejecutar el seed para actualizar productos editados: conserva registros existentes.

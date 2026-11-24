@@ -79,3 +79,16 @@ El modo demo permite verificar interfaz y cotización sin Neon. El seed requiere
 - Captura nueva: [editor administrativo](capturas/panel-editor.jpg).
 
 El login externo de Clerk, la autorización con una cuenta real y el guardado en Neon no se consideran verificados. Ya existe su implementación; se validarán cuando el titular complete la configuración. La guía CONFIGURAR_NEON_CLERK.md describe los pasos y los comandos que no revelan secretos.
+
+## Conexión real con Neon
+
+- Las URL directa y pooled fueron comprobadas sin imprimir sus valores. Ambas corresponden al mismo endpoint y base.
+- Se comprobó que la base estaba vacía antes de migrar. Se aplicaron correctamente las tres migraciones versionadas.
+- La carga inicial se verificó con consultas de conteo: 20 productos, 40 variantes, 3 pedidos ficticios, 1 cliente ficticio y 1 proveedor ficticio. No se utilizaron datos de ventas reales.
+- CATALOG_SOURCE=database se activó solo en el archivo local ignorado por Git.
+- db:check aprobó la conexión y presencia de tablas de catálogo y auditoría. Claves de Clerk y lista de administradores continúan pendientes.
+- La selección automática de direcciones de Node produjo ETIMEDOUT. IPv4 con TLS y hostname verificados funcionó; el ajuste optativo DATABASE_IPV4_ONLY resolvió las conexiones sin cambiar el sistema ni fijar direcciones IP.
+- El primer seed agotó la espera al iniciar la transacción. Se añadió apertura previa de conexión y tiempos explícitos; el segundo intento completó la transacción y los conteos fueron correctos.
+- La portada, la ficha /productos/platos-playos-alba y /admin respondieron 200 leyendo desde Neon. El panel mostró Administración protegida al no disponer de Clerk.
+- Tipos y lint aprobados. El build final se ejecutó con el servidor de desarrollo detenido y pasó correctamente. Un intento concurrente previo falló por archivos de tipos de desarrollo que estaban siendo regenerados; no requirió cambiar el esquema ni la configuración de TypeScript.
+- No se publicaron credenciales, no se desactivó TLS ni se habilitaron pagos reales.
