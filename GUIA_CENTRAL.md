@@ -226,6 +226,8 @@ El primer hito pasó tipos, lint, nueve pruebas de reglas comerciales y build de
 
 ## Cómo mantener la guía
 
+Para trasladar el desarrollo, seguir [Continuar en otra PC](docs/CONTINUAR_EN_OTRA_PC.md) y utilizar el [prompt de continuidad](docs/PROMPT_CONTINUIDAD.md). Los secretos locales y los borradores del navegador no se transfieren con Git. La base existente en Neon se conserva.
+
 Actualizar estados, dependencias y fechas al cerrar cada hito. Registrar aquí los cambios de alcance y enlazar los documentos específicos cuando existan. No marcar una integración completa por disponer solo de un mock ni guardar claves o datos personales en esta guía.
 
 ## Segundo hito de administración

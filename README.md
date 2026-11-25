@@ -71,6 +71,8 @@ Se eligió npm para este proyecto nuevo y se versiona un único `package-lock.js
 ## Documentos
 
 - [Guía central y Gantt](GUIA_CENTRAL.md)
+- [Continuar en otra computadora](docs/CONTINUAR_EN_OTRA_PC.md)
+- [Prompt para una nueva sesión](docs/PROMPT_CONTINUIDAD.md)
 - [Despliegue con Docker y VPS](docs/DESPLIEGUE_DOCKER.md)
 - [Conectar Neon y Clerk](docs/CONFIGURAR_NEON_CLERK.md)
 - [Propuestas iniciales de marca](docs/MARCA.md)
